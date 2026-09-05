@@ -6,11 +6,17 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/common.sh"
 home_src="$DOTFILES_ROOT/home"
 backup_suffix="$(date +%Y%m%d%H%M%S)"
 
+# Tools that keep runtime state next to their config (logs, sockets, session
+# files) so the whole ~/.config/<name> directory must not be a symlink.
+link_files_only() {
+  [ "$1" = "herdr" ]
+}
+
 # Everything in home/ is linked into $HOME at the same relative path. Top level
 # entries are linked as-is, while .config is linked one level deeper so that
 # unmanaged tools can still create their own directories under ~/.config.
 collect_targets() {
-  local path name
+  local path name inner inner_name
   shopt -s dotglob nullglob
   for path in "$home_src"/*; do
     name="${path##*/}"
@@ -21,6 +27,14 @@ collect_targets() {
   for path in "$home_src"/.config/*; do
     name="${path##*/}"
     [ "$name" = ".DS_Store" ] && continue
+    if [ -d "$path" ] && link_files_only "$name"; then
+      for inner in "$path"/*; do
+        inner_name="${inner##*/}"
+        [ "$inner_name" = ".DS_Store" ] && continue
+        printf '.config/%s/%s\n' "$name" "$inner_name"
+      done
+      continue
+    fi
     printf '.config/%s\n' "$name"
   done
   shopt -u dotglob nullglob

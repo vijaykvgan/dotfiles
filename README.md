@@ -1,12 +1,10 @@
 # dotfiles
 
-macOS setup in one repo: the packages to install, the configuration files, and
-the scripts that wire both into a fresh machine.
+Shared shell/editor configs in one repo, plus a small OS-defaults script per
+platform. Homebrew packages and GUI apps are a macOS convenience, not the Linux
+path.
 
 ## Setup
-
-git ships with the Xcode Command Line Tools, which the Homebrew installer sets
-up as well, so a new machine only needs:
 
 ```sh
 git clone git@github.com:vijaykvganaraju/dotfiles.git ~/dotfiles
@@ -14,14 +12,17 @@ cd ~/dotfiles
 ./bootstrap.sh
 ```
 
-`bootstrap.sh` runs five steps, all of which are safe to re-run. Pass names to
-run only some of them, for example `./bootstrap.sh packages symlinks`.
+With no arguments, Darwin installs packages and applies Dock defaults, then
+links `home/`. Linux only links `home/` and hooks zsh. Pass names to run
+specific steps, for example `./bootstrap.sh macos` or `./bootstrap.sh symlinks`.
 
 | Step | What it does |
 | --- | --- |
-| `homebrew` | Installs Homebrew if `brew` is missing |
-| `packages` | Installs everything in `Brewfile` |
-| `herdr` | Installs herdr, which has no Homebrew formula, from its vendor script |
+| `homebrew` | Installs Homebrew if `brew` is missing (Darwin default) |
+| `packages` | Installs everything in `Brewfile` (Darwin default) |
+| `herdr` | Installs herdr from its vendor script (Darwin default) |
+| `macos` | Dock `defaults` on Darwin; no-op elsewhere |
+| `linux` | Linux desktop defaults, if `install/linux.sh` is present |
 | `symlinks` | Links `home/` into `$HOME` |
 | `zsh` | Makes `~/.zshrc` source the shell config in this repo |
 
@@ -46,6 +47,10 @@ tools can keep writing their own directories there.
 | `home/.config/tmux` | `~/.config/tmux` |
 | `home/.config/nvim` | `~/.config/nvim` |
 | `home/.config/zsh` | `~/.config/zsh` |
+| `home/.config/herdr/config.toml` | `~/.config/herdr/config.toml` |
+
+herdr is linked as a file, not a directory: it writes logs, sockets, and
+`session.json` into `~/.config/herdr` at runtime.
 
 Adding a new config file means dropping it under `home/` and re-running
 `./bootstrap.sh symlinks`. Anything already at the destination is moved aside to
@@ -70,3 +75,14 @@ The `Brewfile` installs Zulu 8, 21, and 25. Choose a default with:
 ```sh
 echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)' >> ~/.config/zsh/rc.zsh
 ```
+
+## OS defaults
+
+`install/macos.sh` writes Dock preferences that `defaults` does not keep as files
+under `home/`. Re-run with `./bootstrap.sh macos`. The Dock restarts at the end
+of the step.
+
+Linux does not get a stand-in for the Dock. Add `install/linux.sh` when there
+are real desktop settings to apply; bootstrap will pick it up on Linux
+automatically. GUI apps stay in the macOS `Brewfile` and are not part of this
+layer.

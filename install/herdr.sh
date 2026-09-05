@@ -16,5 +16,5 @@ if have herdr; then
   ok "herdr ready ($(command -v herdr))"
 else
   warn "installer finished but 'herdr' is not on PATH in this shell"
-  warn "open a new terminal, or add its install location to home/.config/zsh/rc.zsh"
+  warn "open a new terminal, or add ~/.local/bin to PATH in home/.config/zsh/rc.zsh"
 fi

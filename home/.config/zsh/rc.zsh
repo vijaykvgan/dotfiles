@@ -10,15 +10,34 @@ for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
 done
 unset _brew
 
-# Node Version Manager. Versions live in ~/.nvm, which is not tracked.
+# Default Node on PATH without sourcing nvm.sh. `nvm` itself is lazy-loaded.
 export NVM_DIR="$HOME/.nvm"
-[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \
-  source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+_nvm_ref=
+[[ -r $NVM_DIR/alias/default ]] && _nvm_ref=$(<"$NVM_DIR/alias/default")
+_nvm_i=0
+while (( ++_nvm_i <= 8 )) && [[ -n $_nvm_ref && -r "$NVM_DIR/alias/$_nvm_ref" ]]; do
+  _nvm_ref=$(<"$NVM_DIR/alias/$_nvm_ref")
+done
+_nvm_bin="$NVM_DIR/versions/node/${_nvm_ref}/bin"
+[[ -d $_nvm_bin ]] && path=("$_nvm_bin" $path)
+unset _nvm_ref _nvm_i _nvm_bin
+
+nvm() {
+  unset -f nvm
+  [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+  [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \
+    source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+  nvm "$@"
+}
 
 # Fish-like completion as you type.
 if [[ -r $HOMEBREW_PREFIX/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh ]]; then
   source $HOMEBREW_PREFIX/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+fi
+
+# Gray suggestion from history, accepted with the right arrow key.
+if [[ -r $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # Ctrl-R history, Ctrl-T files, Alt-C directories. Sourced after
