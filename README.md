@@ -13,8 +13,9 @@ cd ~/dotfiles
 ```
 
 With no arguments, Darwin installs packages and applies Dock defaults, then
-links `home/`. Linux only links `home/` and hooks zsh. Pass names to run
-specific steps, for example `./bootstrap.sh macos` or `./bootstrap.sh symlinks`.
+links `home/`. Linux installs herdr, links `home/`, and hooks zsh. Pass names
+to run specific steps, for example `./bootstrap.sh macos` or
+`./bootstrap.sh symlinks`.
 
 | Step | What it does |
 | --- | --- |
@@ -22,7 +23,7 @@ specific steps, for example `./bootstrap.sh macos` or `./bootstrap.sh symlinks`.
 | `packages` | Installs everything in `Brewfile` (Darwin default) |
 | `herdr` | Installs herdr from its vendor script (Darwin default) |
 | `macos` | Dock `defaults` on Darwin; no-op elsewhere |
-| `linux` | Linux desktop defaults, if `install/linux.sh` is present |
+| `linux` | Installs herdr on Linux; its tracked config is linked by `symlinks` |
 | `symlinks` | Links `home/` into `$HOME` |
 | `zsh` | Makes `~/.zshrc` source the shell config in this repo |
 
@@ -82,7 +83,8 @@ echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)' >> ~/.config/zsh/rc.zsh
 under `home/`. Re-run with `./bootstrap.sh macos`. The Dock restarts at the end
 of the step.
 
-Linux does not get a stand-in for the Dock. Add `install/linux.sh` when there
-are real desktop settings to apply; bootstrap will pick it up on Linux
-automatically. GUI apps stay in the macOS `Brewfile` and are not part of this
-layer.
+`install/linux.sh` installs herdr using the same vendor installer as the
+explicit `herdr` step. The following `symlinks` step links your tracked
+`home/.config/herdr/config.toml` into `~/.config/herdr/config.toml`, while
+preserving the runtime files that herdr writes in that directory. GUI apps stay
+in the macOS `Brewfile` and are not part of this layer.

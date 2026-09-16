@@ -4,7 +4,7 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/lib" && pwd)/common.sh"
 
 # Shared configs always run. Packages and GUI apps are Darwin-only by default.
-# OS defaults live in install/macos.sh and, if you add one, install/linux.sh.
+# OS setup lives in install/macos.sh and install/linux.sh.
 default_steps() {
   case "$(uname -s)" in
     Darwin)
@@ -30,14 +30,14 @@ re-run. Named steps work on any OS (macos no-ops off Darwin).
 
 Defaults:
   Darwin   homebrew packages herdr macos symlinks zsh
-  Linux    linux (if install/linux.sh exists) symlinks zsh
+  Linux    linux (installs herdr) symlinks zsh
 
 Steps:
   homebrew   install Homebrew if it is missing
   packages   install everything listed in Brewfile
   herdr      install herdr from https://herdr.dev/install.sh
   macos      Dock position, auto-hide, and related defaults (Darwin)
-  linux      Linux desktop defaults, only if install/linux.sh exists
+  linux      install Linux terminal workspace tools
   symlinks   link home/ into \$HOME
   zsh        make ~/.zshrc load the shell config from this repo
 EOF
