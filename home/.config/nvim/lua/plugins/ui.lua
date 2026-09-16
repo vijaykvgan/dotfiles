@@ -42,6 +42,15 @@ return {
 		},
 	},
 	{
+		"shortcuts/no-neck-pain.nvim",
+		desc = "Center the buffer with padding buffers",
+		cmd = { "NoNeckPain" },
+		keys = {
+			{ "<leader>z", "<cmd>NoNeckPain<cr>", desc = "Toggle centered buffer" },
+		},
+		opts = { width = 120 },
+	},
+	{
 		"lukas-reineke/indent-blankline.nvim",
 		desc = "Indentation guides for code",
 		main = "ibl",

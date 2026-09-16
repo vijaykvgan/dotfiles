@@ -25,10 +25,11 @@ split_vertical = "prefix+v"
 close_pane = "prefix+x"
 
 # Pane focus via C-M-arrows (your tmux -n bindings). Avoids Neovim <C-h/j/k/l>.
-focus_pane_left = "ctrl+alt+left"
-focus_pane_right = "ctrl+alt+right"
-focus_pane_up = "ctrl+alt+up"
-focus_pane_down = "ctrl+alt+down"
+# Also bound to ctrl+shift+arrows for split-pane nav.
+focus_pane_left = ["ctrl+alt+left", "ctrl+shift+left"]
+focus_pane_right = ["ctrl+alt+right", "ctrl+shift+right"]
+focus_pane_up = ["ctrl+alt+up", "ctrl+shift+up"]
+focus_pane_down = ["ctrl+alt+down", "ctrl+shift+down"]
 
 # Tabs / windows (tmux: c new, r rename, k kill)
 new_tab = "prefix+c"
@@ -64,3 +65,24 @@ help = "prefix+?"
 # Workspaces and agents use switch_workspace / focus_agent above (cmd/super+1..9, ctrl+1..9).
 [keys.indexed]
 tabs = "alt"
+
+# Swap the focused pane with its neighbor (herdr has no built-in swap action).
+[[keys.command]]
+key = "prefix+shift+left"
+type = "shell"
+command = "herdr pane swap --current --direction left"
+
+[[keys.command]]
+key = "prefix+shift+right"
+type = "shell"
+command = "herdr pane swap --current --direction right"
+
+[[keys.command]]
+key = "prefix+shift+up"
+type = "shell"
+command = "herdr pane swap --current --direction up"
+
+[[keys.command]]
+key = "prefix+shift+down"
+type = "shell"
+command = "herdr pane swap --current --direction down"
