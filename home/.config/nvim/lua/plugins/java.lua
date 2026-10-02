@@ -10,6 +10,12 @@ return {
 				java_test = { enable = true },
 			})
 			vim.lsp.enable('jdtls')
+			vim.api.nvim_create_user_command("JavaAppRun", function()
+				require("java-launcher").run()
+			end, { desc = "Run a registered Java app profile", force = true })
+			vim.api.nvim_create_user_command("JavaAppDebug", function()
+				require("java-launcher").debug()
+			end, { desc = "Debug a registered Java app profile", force = true })
 			-- Java-specific keybindings using nvim-java's built-in commands
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "java",
@@ -27,6 +33,10 @@ return {
 					-- Runner commands
 					vim.keymap.set("n", "<leader>jr", "<cmd>JavaRunnerRunMain<cr>",
 					vim.tbl_extend("force", opts, { desc = "Java: Run main" }))
+					vim.keymap.set("n", "<leader>jR", "<cmd>JavaAppRun<cr>",
+					vim.tbl_extend("force", opts, { desc = "Java: Run app profile" }))
+					vim.keymap.set("n", "<leader>jD", "<cmd>JavaAppDebug<cr>",
+					vim.tbl_extend("force", opts, { desc = "Java: Debug app profile" }))
 					vim.keymap.set("n", "<leader>js", "<cmd>JavaRunnerStopMain<cr>",
 					vim.tbl_extend("force", opts, { desc = "Java: Stop main" }))
 					vim.keymap.set("n", "<leader>jl", "<cmd>JavaRunnerToggleLogs<cr>",

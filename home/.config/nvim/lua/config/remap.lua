@@ -125,15 +125,7 @@ local dapui = require("dapui")
 -- Essential keymaps only
 vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
 vim.keymap.set("n", "<F5>", dap.continue, { desc = "Start/Continue" })
-vim.keymap.set("n", "<F6>", function()
-	dap.terminate()
-	-- Auto cleanup after 1 second
-	vim.defer_fn(function()
-		vim.fn.system("lsof -ti:8123 | xargs kill 2>/dev/null")
-		vim.fn.system("lsof -ti:5005 | xargs kill 2>/dev/null")
-		vim.fn.system("lsof -ti:8080 | xargs kill 2>/dev/null")
-	end, 1000)
-end, { desc = "Stop" })
+vim.keymap.set("n", "<F6>", dap.terminate, { desc = "Stop" })
 vim.keymap.set("n", "<F7>", dap.step_over, { desc = "Step Over" })
 vim.keymap.set("n", "<F8>", dap.step_into, { desc = "Step Into" })
 vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle UI" })
@@ -154,13 +146,6 @@ vim.keymap.set("n", "<leader>db", function()
 	dap.list_breakpoints()
 	vim.cmd("copen")
 end, { desc = "List all breakpoints" })
-vim.keymap.set("n", "<leader>dx", function()
-	-- Quick cleanup for stuck processes
-	vim.fn.system("lsof -ti:8123 | xargs kill 2>/dev/null")
-	vim.fn.system("lsof -ti:5005 | xargs kill 2>/dev/null")
-	vim.fn.system("lsof -ti:8080 | xargs kill 2>/dev/null")
-	vim.notify("Cleaned up debugger processes", vim.log.levels.INFO)
-end, { desc = "Cleanup stuck debuggers" })
 vim.keymap.set("n", "<leader>dl", "<cmd>DapShowLog<cr>", { desc = "Show debug log" })
 vim.keymap.set("n", "<leader>dL", function()
 	require('dapui').float_element('console', { width = 200, height = 50, enter = true })
@@ -230,6 +215,8 @@ vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature hel
 -- <leader>jdt - Debug test method
 -- <leader>jdT - Debug test class
 -- <leader>jr - Run main
+-- <leader>jR - Run registered app profile
+-- <leader>jD - Debug registered app profile
 -- <leader>js - Stop main
 -- <leader>jl - Toggle logs
 -- <leader>jc - Refresh DAP config

@@ -15,32 +15,10 @@ return {
 			dapui.setup()
 			require("nvim-dap-virtual-text").setup()
 
-			dap.set_log_level("TRACE")
+			dap.set_log_level("WARN")
 
 			-- Default is 30 seconds, increase to 2 minutes for apps with large classpaths
 			dap.defaults.fallback.timeout = 120000
-
-			-- Java DAP adapter (for attach debugging)
-			-- Note: Launch configurations are handled by nvim-jdtls which provides its own adapter
-			-- This adapter is kept for manual attach scenarios
-			dap.adapters.java = function(callback, config)
-				callback({
-					type = "server",
-					host = config.hostName or "127.0.0.1",
-					port = config.port or 5005,
-				})
-			end
-
-			-- Java DAP configuration
-			dap.configurations.java = {
-				{
-					type = "java",
-					request = "attach",
-					name = "Attach to Java (port 5005)",
-					hostName = "127.0.0.1",
-					port = 5005,
-				},
-			}
 
 			-- Rust / C / C++ debugger (codelldb via Mason)
 			local mason_path = vim.fn.stdpath("data") .. "/mason"
