@@ -8,6 +8,8 @@ return {
 					layout = "left",
 				},
 				tools = {
+					claude = {},
+					codex = {},
 					cursor = {
 						env = {
 							HTTP_PROXY = "http://proxy.wal-mart.com:9080",

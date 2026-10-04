@@ -155,17 +155,10 @@ end, { desc = "DAP Logs (fullscreen)" })
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 -- Fugitive: <leader>gs - Git status (configured in git.lua)
 
--- Sidekick AI (Cursor is the default CLI)
+-- Sidekick AI (no default CLI; uses the attached session or prompts)
 local sidekick = setmetatable({}, {
 	__index = function(_, method)
-		return function(opts)
-			local cli = require("sidekick.cli")
-			if type(opts) == "string" then
-				return cli[method]({ name = "cursor", msg = opts })
-			end
-			opts = vim.tbl_extend("force", { name = "cursor" }, opts or {})
-			return cli[method](opts)
-		end
+		return require("sidekick.cli")[method]
 	end,
 })
 
@@ -179,7 +172,7 @@ vim.keymap.set({ "n", "t", "i", "x" }, "<c-.>", function()
 end, { desc = "Sidekick Focus" })
 vim.keymap.set("n", "<leader>aa", function()
 	sidekick.toggle({ focus = true })
-end, { desc = "Sidekick Toggle Cursor" })
+end, { desc = "Sidekick Toggle" })
 vim.keymap.set("n", "<leader>as", function()
 	require("sidekick.cli").select()
 end, { desc = "Select CLI" })
