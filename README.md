@@ -70,10 +70,11 @@ a `.backup-<timestamp>` copy first.
 
 `~/.zshrc` holds a single line that sources `home/.config/zsh/rc.zsh`, which
 puts Homebrew on `PATH`, loads `zsh-autocomplete` and `zsh-syntax-highlighting`,
-loads SDKMAN, and starts the [Starship](https://starship.rs) prompt, which shows
-the git branch and status. Without Starship installed it falls back to a plain
-prompt with the branch, `*` for unstaged and `+` for staged changes. No
-framework such as Oh My Zsh is involved.
+loads SDKMAN, and starts the [Starship](https://starship.rs) prompt. Its config,
+`home/.config/starship.toml`, is the Pure preset on one line: directory, git
+branch and status, then `❯`. Without Starship installed (as on Linux) it falls
+back to a plain zsh prompt with the same look, showing `*` for unstaged and `+`
+for staged changes. No framework such as Oh My Zsh is involved.
 
 fzf provides `Ctrl-R` for history, `Ctrl-T` for files, and `Alt-C` to jump into a
 directory, using ripgrep to list files so that `.gitignore` is respected. It is

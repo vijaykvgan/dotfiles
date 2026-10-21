@@ -54,9 +54,10 @@ fi
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
-# Starship prompt, with git branch and status. Where it isn't installed (Linux
-# skips the Brewfile), fall back to the branch name with * for unstaged and +
-# for staged changes.
+# Starship prompt (Pure style, on one line), configured in starship.toml. Where
+# it isn't installed (Linux skips the Brewfile), fall back to the same look:
+# directory, branch with * for unstaged and + for staged changes, then ❯, which
+# turns red after a failed command.
 if (( $+commands[starship] )); then
   eval "$(starship init zsh)"
 else
@@ -65,11 +66,11 @@ else
   zstyle ':vcs_info:git:*' check-for-changes true
   zstyle ':vcs_info:git:*' unstagedstr '*'
   zstyle ':vcs_info:git:*' stagedstr '+'
-  zstyle ':vcs_info:git:*' formats ' %F{yellow}%b%u%c%f'
-  zstyle ':vcs_info:git:*' actionformats ' %F{yellow}%b|%a%u%c%f'
+  zstyle ':vcs_info:git:*' formats ' %F{8}%b%F{218}%u%c%f'
+  zstyle ':vcs_info:git:*' actionformats ' %F{8}%b|%a%F{218}%u%c%f'
   precmd_functions+=(vcs_info)
   setopt prompt_subst
-  PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %# '
+  PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %(?.%F{magenta}.%F{red})❯%f '
 fi
 
 # Must stay last, it wraps every widget defined before it.
