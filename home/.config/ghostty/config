@@ -1,0 +1,38 @@
+# Ghostty config, linked to ~/.config/ghostty/config on macOS and Linux.
+# herdr (home/.config/herdr/config.toml) owns these keys, so Ghostty must pass
+# them through. Its defaults differ per OS, which is why each is unbound here.
+
+# macOS: send Option as Alt instead of typing special characters. Ignored on Linux.
+macos-option-as-alt = true
+
+# herdr previous_tab / next_tab. macOS Ghostty sends word jumps (esc b / esc f).
+keybind = alt+arrow_left=unbind
+keybind = alt+arrow_right=unbind
+
+# herdr pane focus. Linux Ghostty uses these for its own splits and tabs.
+keybind = ctrl+alt+arrow_left=unbind
+keybind = ctrl+alt+arrow_right=unbind
+keybind = ctrl+alt+arrow_up=unbind
+keybind = ctrl+alt+arrow_down=unbind
+keybind = ctrl+shift+arrow_left=unbind
+keybind = ctrl+shift+arrow_right=unbind
+
+# herdr alt+1..9 tab jump. Linux Ghostty uses these for its own tabs, bound
+# both by character and by physical key.
+keybind = alt+1=unbind
+keybind = alt+2=unbind
+keybind = alt+3=unbind
+keybind = alt+4=unbind
+keybind = alt+5=unbind
+keybind = alt+6=unbind
+keybind = alt+7=unbind
+keybind = alt+8=unbind
+keybind = alt+9=unbind
+keybind = alt+digit_1=unbind
+keybind = alt+digit_2=unbind
+keybind = alt+digit_3=unbind
+keybind = alt+digit_4=unbind
+keybind = alt+digit_5=unbind
+keybind = alt+digit_6=unbind
+keybind = alt+digit_7=unbind
+keybind = alt+digit_8=unbind

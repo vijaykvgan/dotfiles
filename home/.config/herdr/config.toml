@@ -1,5 +1,7 @@
 # herdr config, linked to ~/.config/herdr/config.toml. Only this file is
 # tracked: herdr also writes logs, sockets, and session.json in that directory.
+# The same keys work on macOS and Linux. home/.config/ghostty/config makes
+# Ghostty pass them through, including Option as Alt on macOS.
 onboarding = false
 
 [theme]
@@ -61,8 +63,8 @@ goto = "prefix+g"
 toggle_sidebar = "prefix+b"
 help = "prefix+?"
 
-# Direct alt+1..9 tab jump (your tmux M-1..9). Needs Option-as-Meta in the terminal.
-# Workspaces and agents use switch_workspace / focus_agent above (cmd/super+1..9, ctrl+1..9).
+# Direct alt+1..9 tab jump (your tmux M-1..9).
+# Workspaces and agents use switch_workspace / focus_agent above (alt+shift+1..9, ctrl+1..9).
 [keys.indexed]
 tabs = "alt"
 
