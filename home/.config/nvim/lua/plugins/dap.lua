@@ -20,6 +20,17 @@ return {
 			-- Default is 30 seconds, increase to 2 minutes for apps with large classpaths
 			dap.defaults.fallback.timeout = 120000
 
+			-- Attach to a JVM already started with -agentlib:jdwp=...,address=5005.
+			-- nvim-java provides the java adapter and appends its own configurations.
+			dap.configurations.java = dap.configurations.java or {}
+			table.insert(dap.configurations.java, {
+				type = "java",
+				request = "attach",
+				name = "Attach to Java (port 5005)",
+				hostName = "127.0.0.1",
+				port = 5005,
+			})
+
 			-- Rust / C / C++ debugger (codelldb via Mason)
 			local mason_path = vim.fn.stdpath("data") .. "/mason"
 			dap.adapters.codelldb = {
