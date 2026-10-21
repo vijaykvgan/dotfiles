@@ -118,17 +118,51 @@ local function matching_profiles(registry, project_root)
 	return profiles
 end
 
+local sdkman_java_dir = vim.fs.joinpath(vim.env.SDKMAN_DIR or vim.fn.expand("~/.sdkman"), "candidates", "java")
+
+-- SDKMAN JDK matching a version such as 21, "1.8", or "21.0.12". SDKMAN's
+-- default wins when it matches, otherwise the newest match, skipping JavaFX builds.
+local function sdkman_java_home(version)
+	local wanted = tostring(version):gsub("^1%.(%d)", "%1")
+	local function matches(name)
+		return name == wanted
+			or (vim.startswith(name, wanted) and name:sub(#wanted + 1, #wanted + 1):match("^[%.%+%-]") ~= nil)
+	end
+
+	local current = vim.uv.fs_readlink(vim.fs.joinpath(sdkman_java_dir, "current"))
+	current = current and vim.fs.basename(current)
+	if current and matches(current) then
+		return vim.fs.joinpath(sdkman_java_dir, current)
+	end
+
+	local best, best_version
+	for name, type in vim.fs.dir(sdkman_java_dir) do
+		if type == "directory" and matches(name) and not name:find("%.fx%-") then
+			local parsed = vim.version.parse(name:match("^[^-]+"), { strict = false })
+			if not best or (parsed and best_version and vim.version.gt(parsed, best_version)) then
+				best, best_version = name, parsed
+			end
+		end
+	end
+
+	return best and vim.fs.joinpath(sdkman_java_dir, best)
+end
+
 local function java_executable(version)
-	if vim.fn.has("macunix") ~= 1 then
-		error("java_version resolution is currently supported only on macOS")
+	local home = sdkman_java_home(version)
+
+	if not home and vim.fn.has("macunix") == 1 then
+		local result = vim.system({ "/usr/libexec/java_home", "-v", tostring(version) }, { text = true }):wait()
+		if result.code == 0 then
+			home = vim.trim(result.stdout)
+		end
 	end
 
-	local result = vim.system({ "/usr/libexec/java_home", "-v", tostring(version) }, { text = true }):wait()
-	if result.code ~= 0 then
-		error(("Java %s is not installed: %s"):format(version, vim.trim(result.stderr or "")))
+	if not home then
+		error(("Java %s is not installed, add it with: sdk install java <version>-zulu"):format(version))
 	end
 
-	return vim.fs.joinpath(vim.trim(result.stdout), "bin", "java")
+	return vim.fs.joinpath(home, "bin", "java")
 end
 
 local function parse_env_file(path)

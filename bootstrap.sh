@@ -8,7 +8,7 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")/lib" && pwd)/common.sh"
 default_steps() {
   case "$(uname -s)" in
     Darwin)
-      printf '%s\n' homebrew packages herdr macos symlinks zsh
+      printf '%s\n' homebrew packages sdkman herdr macos symlinks zsh
       ;;
     Linux)
       [ -f "$DOTFILES_ROOT/install/linux.sh" ] && printf '%s\n' linux
@@ -29,12 +29,13 @@ With no arguments, runs the default steps for this OS. Each step is safe to
 re-run. Named steps work on any OS (macos no-ops off Darwin).
 
 Defaults:
-  Darwin   homebrew packages herdr macos symlinks zsh
+  Darwin   homebrew packages sdkman herdr macos symlinks zsh
   Linux    linux (installs herdr) symlinks zsh
 
 Steps:
   homebrew   install Homebrew if it is missing
   packages   install everything listed in Brewfile
+  sdkman     install SDKMAN and Zulu 21 as the default Java
   herdr      install herdr from https://herdr.dev/install.sh
   macos      Dock position, auto-hide, and related defaults (Darwin)
   linux      install Linux terminal workspace tools

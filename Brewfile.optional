@@ -1,0 +1,5 @@
+# Packages not every machine needs. `./bootstrap.sh packages` asks about each
+# one before installing anything, and skips them all when it can't ask.
+
+cask "postman"                        # API client
+cask "dbeaver-community"              # SQL client

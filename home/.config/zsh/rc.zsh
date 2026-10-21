@@ -50,17 +50,27 @@ if (( $+commands[fzf] )); then
   fi
 fi
 
-# Branch name in the prompt, with * for unstaged and + for staged changes.
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' unstagedstr '*'
-zstyle ':vcs_info:git:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats ' %F{yellow}%b%u%c%f'
-zstyle ':vcs_info:git:*' actionformats ' %F{yellow}%b|%a%u%c%f'
-precmd_functions+=(vcs_info)
-setopt prompt_subst
-PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %# '
+# SDKMAN manages Java (and JAVA_HOME). Installed by install/sdkman.sh.
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+
+# Starship prompt, with git branch and status. Where it isn't installed (Linux
+# skips the Brewfile), fall back to the branch name with * for unstaged and +
+# for staged changes.
+if (( $+commands[starship] )); then
+  eval "$(starship init zsh)"
+else
+  autoload -Uz vcs_info
+  zstyle ':vcs_info:*' enable git
+  zstyle ':vcs_info:git:*' check-for-changes true
+  zstyle ':vcs_info:git:*' unstagedstr '*'
+  zstyle ':vcs_info:git:*' stagedstr '+'
+  zstyle ':vcs_info:git:*' formats ' %F{yellow}%b%u%c%f'
+  zstyle ':vcs_info:git:*' actionformats ' %F{yellow}%b|%a%u%c%f'
+  precmd_functions+=(vcs_info)
+  setopt prompt_subst
+  PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %# '
+fi
 
 # Must stay last, it wraps every widget defined before it.
 if [[ -r $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then

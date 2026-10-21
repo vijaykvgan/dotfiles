@@ -16,6 +16,7 @@ brew "nvm"                            # Node Version Manager
 brew "python"                         # latest Python 3
 brew "gh"                             # GitHub CLI
 brew "lazygit"                        # terminal UI for git
+brew "starship"                       # prompt, configured in rc.zsh
 brew "zsh-autocomplete"               # fish-like as-you-type completion
 brew "zsh-autosuggestions"            # gray history suggestions as you type
 brew "zsh-syntax-highlighting"        # colors invalid commands before you run them
@@ -24,14 +25,6 @@ brew "zsh-syntax-highlighting"        # colors invalid commands before you run t
 cask "ghostty"                        # terminal emulator
 cask "maccy"                          # clipboard history, recommended by Anish Varsha Iska
 cask "rectangle"                      # keyboard window management
-cask "postman"                        # API client
-cask "dbeaver-community"              # SQL client
+# Apps not every machine needs are in Brewfile.optional, asked about one by one.
 
-# --- Java -----------------------------------------------------------------
-# Azul Zulu is used over other OpenJDK builds for its coverage of old and new
-# releases under one license: https://www.azul.com/products/core/jdk-comparison-matrix
-# Pick a default with, for example:
-#   echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)' >> ~/.zshrc
-cask "zulu@8"                         # legacy projects
-cask "zulu@21"                        # current LTS
-cask "zulu@25"                        # latest LTS
+# Java is managed by SDKMAN rather than Homebrew, see install/sdkman.sh.
