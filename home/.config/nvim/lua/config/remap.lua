@@ -70,6 +70,34 @@ vim.keymap.set("n", "<leader>fb", function() require("snacks").picker.buffers() 
 vim.keymap.set("n", "<leader>fr", function() require("snacks").picker.recent() end, { desc = "Recent Files" })
 vim.keymap.set("n", "<leader>fw", function() require("snacks").picker.grep_word() end, { desc = "Grep Word" })
 
+-- Scoped grep. Inside any grep picker you can also type `pattern -- -g *.java` to pass rg args inline.
+local function split_list(str)
+	local items = {}
+	for item in (str or ""):gmatch("[^,%s]+") do
+		table.insert(items, item)
+	end
+	return items
+end
+
+-- Grep only in files matching glob(s), e.g. "*.java" or "*.java, *.sql" (defaults to current file's extension)
+vim.keymap.set("n", "<leader>fe", function()
+	local ext = vim.fn.expand("%:e")
+	vim.ui.input({ prompt = "Grep in globs: ", default = ext ~= "" and ("*." .. ext) or "" }, function(input)
+		local globs = split_list(input)
+		if #globs == 0 then return end
+		require("snacks").picker.grep({ glob = globs, title = "Grep " .. table.concat(globs, " ") })
+	end)
+end, { desc = "Grep by File Type" })
+
+-- Grep only inside directories, e.g. "src/main" or "src/main/resources, src/test"
+vim.keymap.set("n", "<leader>fd", function()
+	vim.ui.input({ prompt = "Grep in dirs: ", completion = "dir" }, function(input)
+		local dirs = split_list(input)
+		if #dirs == 0 then return end
+		require("snacks").picker.grep({ dirs = dirs, title = "Grep in " .. table.concat(dirs, " ") })
+	end)
+end, { desc = "Grep in Directory" })
+
 -- Harpoon
 local harpoon = require("harpoon")
 
